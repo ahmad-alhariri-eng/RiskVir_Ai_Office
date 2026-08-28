@@ -20,6 +20,7 @@
     <SupportUrl DefaultValue="https://office-addin-two.vercel.app" />
     <AppDomains>
         <AppDomain>https://office-addin-two.vercel.app</AppDomain>
+        <AppDomain>https://lectures-rv.alwaysdata.net</AppDomain>
         <AppDomain>https://localhost:8000</AppDomain>
         <AppDomain>https://127.0.0.1:8000</AppDomain>
     </AppDomains>
