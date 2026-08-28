@@ -215,7 +215,34 @@ export async function executeWordAction(action: WordAction) {
 
         // ── Clear Document ───────────────────────────────────────────────────
         case 'clearDocument': {
-          body.clear();
+          // body.clear() only clears formatting; insertText replace truly empties it
+          body.insertText('', Word.InsertLocation.replace);
+          break;
+        }
+
+        // ── Delete Content (alias for clearDocument) ─────────────────────────
+        case 'deleteContent': {
+          body.insertText('', Word.InsertLocation.replace);
+          break;
+        }
+
+        // ── Delete Selected Text ─────────────────────────────────────────────
+        case 'deleteSelection': {
+          const sel = doc.getSelection();
+          sel.insertText('', Word.InsertLocation.replace);
+          break;
+        }
+
+        // ── Delete Found Text ────────────────────────────────────────────────
+        case 'deleteText': {
+          const a = action as any;
+          if (!a.text) break;
+          const results = body.search(a.text, { matchCase: false, matchWholeWord: false });
+          results.load('items');
+          await context.sync();
+          results.items.forEach((item) => {
+            item.insertText('', Word.InsertLocation.replace);
+          });
           break;
         }
 

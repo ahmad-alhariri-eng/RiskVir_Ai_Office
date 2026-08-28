@@ -163,6 +163,86 @@ In addition to the core commands above, you may use the following extended comma
   "format": "pdf",
   "filename": "output.pdf"
 }
+</office_action>
+
+**Clear / delete ALL document content (empty the document completely):**
+<office_action>
+{
+  "command": "clearDocument"
+}
+</office_action>
+
+**Delete specific text wherever it appears in the document:**
+<office_action>
+{
+  "command": "deleteText",
+  "text": "the phrase to remove"
+}
+</office_action>
+
+**Delete currently selected text:**
+<office_action>
+{
+  "command": "deleteSelection"
+}
+</office_action>
+
+**Insert a formatted paragraph at end of document:**
+<office_action>
+{
+  "command": "insertParagraph",
+  "text": "This is a new paragraph.",
+  "styleName": "Normal",
+  "bold": false,
+  "fontSize": 12,
+  "fontColor": "#000000"
+}
+</office_action>
+
+**Insert a heading:**
+<office_action>
+{
+  "command": "insertHeading",
+  "text": "Section Title",
+  "level": 1
+}
+</office_action>
+
+**Insert a table:**
+<office_action>
+{
+  "command": "insertTable",
+  "tableData": [
+    ["Name", "Age", "City"],
+    ["Ahmad", "30", "Dubai"],
+    ["Sara", "25", "Riyadh"]
+  ],
+  "headerRow": true,
+  "headerColor": "#2E75B6"
+}
+</office_action>
+
+**Format the current selection (bold, color, size, etc.):**
+<office_action>
+{
+  "command": "formatSelection",
+  "bold": true,
+  "fontSize": 14,
+  "fontColor": "#1F3864",
+  "italic": false,
+  "underline": false
+}
+</office_action>
+
+**Append a new section with heading and content:**
+<office_action>
+{
+  "command": "appendSection",
+  "heading": "New Section",
+  "level": 2,
+  "content": "Section body text here.",
+  "contentType": "text"
+}
 </office_action>"""
 
 

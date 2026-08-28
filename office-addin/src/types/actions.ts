@@ -133,6 +133,19 @@ export interface AcceptAllChangesAction extends BaseAction {
   command: 'acceptAllChanges';
 }
 
+export interface DeleteContentAction extends BaseAction {
+  command: 'deleteContent';
+}
+
+export interface DeleteSelectionAction extends BaseAction {
+  command: 'deleteSelection';
+}
+
+export interface DeleteTextAction extends BaseAction {
+  command: 'deleteText';
+  text: string;
+}
+
 export type WordAction =
   | InsertTextAction
   | InsertHtmlAction
@@ -151,6 +164,9 @@ export type WordAction =
   | FormatSelectionAction
   | InsertHorizontalRuleAction
   | ClearDocumentAction
+  | DeleteContentAction
+  | DeleteSelectionAction
+  | DeleteTextAction
   | InsertAtEndAction
   | AppendSectionAction
   | TrackChangesAction
