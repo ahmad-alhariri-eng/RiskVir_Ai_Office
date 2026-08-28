@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: officeai-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ORCAROUTER_API_KEY
+        sync: false   # Enter manually in Render dashboard
+      - key: ORCAROUTER_BASE_URL
+        value: https://api.orcarouter.ai/v1
+      - key: AI_MODEL
+        value: deepseek/deepseek-v4-pro-free
+      - key: OFFICEAI_MAX_TOKENS
+        value: "8192"
