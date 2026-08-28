@@ -63,3 +63,5 @@ build/
 *.docx
 *.pdf
 plan_extracted.txt
+
+.vercel
