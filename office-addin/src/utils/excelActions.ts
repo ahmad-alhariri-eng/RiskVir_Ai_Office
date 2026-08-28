@@ -94,7 +94,42 @@ export async function executeExcelAction(action: ExcelAction) {
         case 'insertFormula': {
           if (!action.cell || !action.formula) break;
           const cell = sheet.getRange(action.cell);
-          cell.formulas = [[action.formula]];
+
+          // If it's a range of formulas (formulaRange)
+          const a = action as any;
+          if (a.formulaRange && Array.isArray(a.formulaRange)) {
+            // Insert a 2D array of formulas
+            const rangeRef = sheet.getRange(action.cell);
+            rangeRef.formulas = a.formulaRange;
+          } else {
+            // Single formula — ensure it starts with =
+            const formula = action.formula.startsWith('=')
+              ? action.formula
+              : `=${action.formula}`;
+            cell.formulas = [[formula]];
+          }
+          break;
+        }
+
+        // ── Insert Formula Range (batch formulas into a column) ──
+        case 'insertFormulaRange': {
+          const a = action as any;
+          if (!a.startCell || !a.formula || !a.count) break;
+
+          const startRange = sheet.getRange(a.startCell);
+          startRange.load(['rowIndex', 'columnIndex']);
+          await context.sync();
+
+          const rowStart = startRange.rowIndex;
+          const col = startRange.columnIndex;
+          const count = a.count as number;
+
+          for (let i = 0; i < count; i++) {
+            const cellRef = sheet.getCell(rowStart + i, col);
+            const adjustedFormula = (a.formula as string)
+              .replace(/\$?(\d+)/g, (_m: string, num: string) => String(parseInt(num) + i));
+            cellRef.formulas = [[adjustedFormula.startsWith('=') ? adjustedFormula : `=${adjustedFormula}`]];
+          }
           break;
         }
 
@@ -320,8 +355,63 @@ export async function executeExcelAction(action: ExcelAction) {
           break;
         }
 
+        // ── Rename Sheet ──────────────────────────────────────────
+        case 'renameSheet': {
+          const a = action as any;
+          const targetSheet = a.oldName
+            ? context.workbook.worksheets.getItem(a.oldName)
+            : sheet;
+          targetSheet.name = a.newName;
+          break;
+        }
+
+        // ── Freeze Panes ──────────────────────────────────────────
+        case 'freezePanes': {
+          const a = action as any;
+          if (a.row !== undefined && a.column !== undefined) {
+            sheet.freezePanes.freezeAt(sheet.getCell(a.row, a.column));
+          } else if (a.row !== undefined) {
+            sheet.freezePanes.freezeRows(a.row);
+          } else if (a.column !== undefined) {
+            sheet.freezePanes.freezeColumns(a.column);
+          }
+          break;
+        }
+
+        // ── Sort Range ────────────────────────────────────────────
+        case 'sortRange': {
+          const a = action as any;
+          if (!a.range) break;
+          const sortRange = sheet.getRange(a.range);
+          sortRange.sort.apply([{
+            key: a.columnIndex ?? 0,
+            ascending: a.ascending !== false,
+          }]);
+          break;
+        }
+
+        // ── Set Number Format ────────────────────────────────────
+        case 'setNumberFormat': {
+          const a = action as any;
+          if (!a.range || !a.format) break;
+          sheet.getRange(a.range).numberFormat = [[a.format]];
+          break;
+        }
+
+        // ── Protect Sheet ─────────────────────────────────────────
+        case 'protectSheet': {
+          const a = action as any;
+          sheet.protection.protect({
+            allowAutoFilter: true,
+            allowSort: true,
+            allowInsertRows: false,
+            allowDeleteRows: false,
+          }, a.password);
+          break;
+        }
+
         default:
-          console.warn(`Unknown Excel command: ${(action as any).command}`);
+          console.warn(`[RiskVir AI] Unknown Excel command: ${(action as any).command}`);
       }
 
       await context.sync();

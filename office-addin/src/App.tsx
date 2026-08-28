@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef } from 'react'
 import './App.css'
-import { getSelectedWordText } from './utils/wordReader'
+import { getSelectedWordText, type WordContext } from './utils/wordReader'
 import { getSelectedExcelData, type ExcelContext } from './utils/excelReader'
-import { getCurrentSlideText } from './utils/pptReader'
+import { getCurrentSlideText, type PptContext } from './utils/pptReader'
 import { executeWordAction } from './utils/wordActions'
 import { executeExcelAction } from './utils/excelActions'
 import { executePptAction } from './utils/pptActions'
@@ -21,7 +21,7 @@ type Message = {
 
 type OfficeContext = {
   app: string
-  selection: string | unknown[][] | ExcelContext | null
+  selection: string | unknown[][] | ExcelContext | WordContext | PptContext | null
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────

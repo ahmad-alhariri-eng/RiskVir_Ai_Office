@@ -52,15 +52,109 @@ export interface SetDocumentPropertyAction extends BaseAction {
   value: string;
 }
 
+export interface InsertParagraphAction extends BaseAction {
+  command: 'insertParagraph';
+  text: string;
+  styleName?: string;
+  bold?: boolean;
+  fontSize?: number;
+  fontColor?: string;
+  alignment?: string;
+}
+
+export interface InsertHeadingAction extends BaseAction {
+  command: 'insertHeading';
+  text: string;
+  level?: number;
+}
+
+export interface InsertBulletListAction extends BaseAction {
+  command: 'insertBulletList';
+  items: string[];
+}
+
+export interface InsertTableAction extends BaseAction {
+  command: 'insertTable';
+  tableData: string[][];
+  headerRow?: boolean;
+  headerColor?: string;
+}
+
+export interface InsertCommentAction extends BaseAction {
+  command: 'insertComment';
+  commentText: string;
+  targetText?: string;
+}
+
+export interface FormatSelectionAction extends BaseAction {
+  command: 'formatSelection';
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  fontSize?: number;
+  fontColor?: string;
+  highlightColor?: string;
+  styleName?: string;
+}
+
+export interface InsertHorizontalRuleAction extends BaseAction {
+  command: 'insertHorizontalRule';
+}
+
+export interface ClearDocumentAction extends BaseAction {
+  command: 'clearDocument';
+}
+
+export interface InsertAtEndAction extends BaseAction {
+  command: 'insertAtEnd';
+  text?: string;
+  html?: string;
+}
+
+export interface AppendSectionAction extends BaseAction {
+  command: 'appendSection';
+  heading?: string;
+  level?: number;
+  content?: string;
+  contentType?: 'text' | 'html';
+}
+
+export interface InsertSectionBreakAction extends BaseAction {
+  command: 'insertSectionBreak';
+  breakType?: 'nextPage' | 'continuous' | 'evenPage';
+}
+
+export interface TrackChangesAction extends BaseAction {
+  command: 'trackChanges';
+  enable: boolean;
+}
+
+export interface AcceptAllChangesAction extends BaseAction {
+  command: 'acceptAllChanges';
+}
+
 export type WordAction =
   | InsertTextAction
   | InsertHtmlAction
   | ReplaceSelectionAction
   | ApplyStyleAction
   | InsertPageBreakAction
+  | InsertSectionBreakAction
   | InsertTOCAction
   | FindAndReplaceAction
-  | SetDocumentPropertyAction;
+  | SetDocumentPropertyAction
+  | InsertParagraphAction
+  | InsertHeadingAction
+  | InsertBulletListAction
+  | InsertTableAction
+  | InsertCommentAction
+  | FormatSelectionAction
+  | InsertHorizontalRuleAction
+  | ClearDocumentAction
+  | InsertAtEndAction
+  | AppendSectionAction
+  | TrackChangesAction
+  | AcceptAllChangesAction;
 
 // ─── Excel Actions ───────────────────────────────────────────────
 export interface InsertDataAction extends BaseAction {
@@ -171,21 +265,65 @@ export interface ClearRangeAction extends BaseAction {
   clearType?: 'contents' | 'formats' | 'all';
 }
 
+export interface InsertFormulaRangeAction extends BaseAction {
+  command: 'insertFormulaRange';
+  startCell: string;
+  formula: string;
+  count: number;
+}
+
+export interface RenameSheetAction extends BaseAction {
+  command: 'renameSheet';
+  oldName?: string;
+  newName: string;
+}
+
+export interface ProtectSheetAction extends BaseAction {
+  command: 'protectSheet';
+  password?: string;
+  allowSelect?: boolean;
+}
+
+export interface FreezePanesAction extends BaseAction {
+  command: 'freezePanes';
+  row?: number;
+  column?: number;
+}
+
+export interface SortRangeAction extends BaseAction {
+  command: 'sortRange';
+  range: string;
+  columnIndex?: number;
+  ascending?: boolean;
+}
+
+export interface SetNumberFormatAction extends BaseAction {
+  command: 'setNumberFormat';
+  range: string;
+  format: string;
+}
+
 export type ExcelAction =
   | InsertDataAction
   | AddChartAction
   | InsertFormulaAction
+  | InsertFormulaRangeAction
   | FormatRangeAction
   | AddConditionalFormatAction
   | CreatePivotTableAction
   | AddSheetAction
+  | RenameSheetAction
   | SetColumnWidthAction
   | SetRowHeightAction
   | MergeRangeAction
   | UnmergeRangeAction
   | AutoFitColumnsAction
   | AddDataValidationAction
-  | ClearRangeAction;
+  | ClearRangeAction
+  | ProtectSheetAction
+  | FreezePanesAction
+  | SortRangeAction
+  | SetNumberFormatAction;
 
 // ─── PowerPoint Actions ──────────────────────────────────────────
 export interface AddSlideAction extends BaseAction {
@@ -232,12 +370,60 @@ export interface FormatSlideAction extends BaseAction {
   backgroundColor?: string;
 }
 
+export interface AddSlideWithImageAction extends BaseAction {
+  command: 'addSlideWithImage';
+  title?: string;
+  imagePlaceholderText?: string;
+  caption?: string;
+}
+
+export interface MoveSlideAction extends BaseAction {
+  command: 'moveSlide';
+  fromIndex: number;
+  toIndex: number;
+}
+
+export interface SetThemeAction extends BaseAction {
+  command: 'setTheme';
+  primaryColor?: string;
+  accentColor?: string;
+  fontHeading?: string;
+  fontBody?: string;
+  backgroundColor?: string;
+}
+
+export interface DeleteSlideAction extends BaseAction {
+  command: 'deleteSlide';
+  slideIndex?: number;
+}
+
+export interface DuplicateSlideAction extends BaseAction {
+  command: 'duplicateSlide';
+  slideIndex?: number;
+}
+
+export interface EditShapeTextAction extends BaseAction {
+  command: 'editShapeText';
+  slideIndex?: number;
+  shapeName?: string;
+  shapeIndex?: number;
+  newText: string;
+  fontSize?: number;
+  fontColor?: string;
+}
+
 export type PowerPointAction =
   | AddSlideAction
   | AddSlideWithChartAction
   | AddSlideWithTableAction
   | AddSpeakerNotesAction
-  | FormatSlideAction;
+  | FormatSlideAction
+  | AddSlideWithImageAction
+  | MoveSlideAction
+  | SetThemeAction
+  | DeleteSlideAction
+  | DuplicateSlideAction
+  | EditShapeTextAction;
 
 // ─── Union ───────────────────────────────────────────────────────
 export type OfficeAction = WordAction | ExcelAction | PowerPointAction | BaseAction;
