@@ -292,7 +292,7 @@ function App() {
     <div className="app-shell">
       {/* Header */}
       <header className="app-header">
-        <div className="app-title">OfficeAI Pro</div>
+        <div className="app-title">RiskVir AI Office</div>
         <div className="app-meta">
           <span className="host-badge">{officeHost}</span>
           <span className={`status-badge ${backendStatus.startsWith('✅') ? 'ok' : backendStatus.startsWith('⚠️') ? 'warn' : 'err'}`}>

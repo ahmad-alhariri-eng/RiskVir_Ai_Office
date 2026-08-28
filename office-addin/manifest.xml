@@ -8,14 +8,14 @@
     
     <Id>d3e91122-38e8-4682-9f3d-5f33d7b21234</Id>
     <Version>1.1.0.0</Version>
-    <ProviderName>OfficeAI Pro</ProviderName>
+    <ProviderName>RiskVir AI</ProviderName>
     <DefaultLocale>en-US</DefaultLocale>
     
-    <DisplayName DefaultValue="OfficeAI Pro" />
-    <Description DefaultValue="AI Assistant for Excel, Word, and PowerPoint — executes any task directly in your document."/>
+    <DisplayName DefaultValue="RiskVir AI Office" />
+    <Description DefaultValue="RiskVir AI Assistant for Excel, Word, and PowerPoint — executes any task directly in your document."/>
     
-    <IconUrl DefaultValue="https://raw.githubusercontent.com/OfficeDev/office-js-snippets/prod/assets/logo-filled.png" />
-    <HighResolutionIconUrl DefaultValue="https://raw.githubusercontent.com/OfficeDev/office-js-snippets/prod/assets/logo-filled.png" />
+    <IconUrl DefaultValue="https://office-addin-two.vercel.app/logo.png" />
+    <HighResolutionIconUrl DefaultValue="https://office-addin-two.vercel.app/logo-highres.png" />
     
     <SupportUrl DefaultValue="https://office-addin-two.vercel.app" />
     <AppDomains>
