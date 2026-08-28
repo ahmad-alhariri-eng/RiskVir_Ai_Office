@@ -10,8 +10,8 @@ import { MessageContent } from './components/MessageContent'
 import type { OfficeAction } from './types/actions'
 
 // ─── Backend URL — HTTPS first, HTTP fallback ────────────────────
-const BACKEND_HOST = 'localhost:8000'
-let BACKEND_URL = `http://${BACKEND_HOST}`
+const BACKEND_HOST = 'lectures-rv.alwaysdata.net'
+let BACKEND_URL = `https://${BACKEND_HOST}`
 
 // ─── Types ───────────────────────────────────────────────────────
 type Message = {
