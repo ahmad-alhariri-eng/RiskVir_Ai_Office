@@ -322,6 +322,18 @@ function App() {
             <div key={idx} className={`message-row ${msg.role}`}>
               <div className="bubble">
                 <MessageContent content={msg.content} isUser={msg.role === 'user'} />
+                {msg.role === 'assistant' && (
+                  <button 
+                    className="copy-btn" 
+                    onClick={() => navigator.clipboard.writeText(msg.content)}
+                    title="Copy message"
+                  >
+                    <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
           ))
@@ -338,21 +350,38 @@ function App() {
 
       {/* Input bar */}
       <footer className="input-bar">
-        <input
-          type="text"
+        <textarea
           className="chat-input"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
+          onChange={(e) => {
+            setInputValue(e.target.value)
+            e.target.style.height = 'auto'
+            e.target.style.height = `${Math.min(e.target.scrollHeight, 150)}px`
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              handleSend()
+              e.currentTarget.style.height = 'auto'
+            }
+          }}
           placeholder="Ask a question…"
           disabled={isTyping}
+          rows={1}
         />
         <button
           className="send-btn"
-          onClick={() => handleSend()}
+          onClick={(e) => {
+            handleSend()
+            const ta = e.currentTarget.previousElementSibling as HTMLTextAreaElement
+            if (ta) ta.style.height = 'auto'
+          }}
           disabled={isTyping || !inputValue.trim()}
         >
-          Send
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
         </button>
       </footer>
     </div>

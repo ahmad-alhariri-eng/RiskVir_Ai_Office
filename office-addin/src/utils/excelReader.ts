@@ -24,6 +24,7 @@ export interface ExcelContext {
     columnCount: number;
     firstRow: unknown[][];   // first row (headers)
     lastRow: unknown[][];    // last data row
+    headerColumns?: string[]; // exact column letters for each header
   } | null;
 }
 
@@ -55,11 +56,12 @@ export async function getSelectedExcelData(): Promise<ExcelContext> {
     let usedRangeInfo: ExcelContext['usedRange'] = null;
     try {
       const used = activeSheet.getUsedRange();
-      used.load(['address', 'rowCount', 'columnCount']);
+      used.load(['address', 'rowCount', 'columnCount', 'columnIndex']);
       await context.sync();
 
       const usedRows = used.rowCount;
       const usedCols = used.columnCount;
+      const startCol = used.columnIndex; // 0-based
 
       if (usedRows > 0 && usedCols > 0) {
         // Load first row (headers) and last row separately
@@ -71,12 +73,29 @@ export async function getSelectedExcelData(): Promise<ExcelContext> {
 
         await context.sync();
 
+        // Helper to convert 0-based index to Excel column letter (A, B, C...)
+        const getColLetter = (idx: number) => {
+          let temp = idx + 1;
+          let letter = '';
+          while (temp > 0) {
+            const remainder = (temp - 1) % 26;
+            letter = String.fromCharCode(65 + remainder) + letter;
+            temp = Math.floor((temp - remainder) / 26);
+          }
+          return letter;
+        };
+
+        const headersWithCols = (headerRow.values[0] || []).map((h, i) => {
+          return `${getColLetter(startCol + i)}: ${h}`;
+        });
+
         usedRangeInfo = {
           address: used.address,
           rowCount: usedRows,
           columnCount: usedCols,
           firstRow: headerRow.values,
           lastRow: lastRow.values,
+          headerColumns: headersWithCols,
         };
       }
     } catch {
