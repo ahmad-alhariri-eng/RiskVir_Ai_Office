@@ -34,7 +34,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="OfficeAI Pro Backend", lifespan=lifespan)
+app = FastAPI(title="OfficeAI Pro Backend", lifespan=lifespan, debug=True)
 
 ALLOWED_ORIGINS = [
     "https://localhost:8000",
