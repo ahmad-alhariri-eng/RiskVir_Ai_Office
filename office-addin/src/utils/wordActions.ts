@@ -1,4 +1,5 @@
 import type { WordAction } from '../types/actions';
+import { latexToOoxml } from './latexToOmml';
 
 export async function executeWordAction(action: WordAction) {
   try {
@@ -310,6 +311,23 @@ export async function executeWordAction(action: WordAction) {
             (doc as any).revisions?.acceptAll();
           } catch {
             console.warn('[RiskVir AI] acceptAllChanges requires higher API version');
+          }
+          break;
+        }
+
+        // ── Insert Equation (LaTeX → OMML) ─────────────────────────────────
+        case 'insertEquation': {
+          const a = action as any;
+          if (!a.latex) break;
+          try {
+            const ooxml = latexToOoxml(a.latex);
+            const selection = doc.getSelection();
+            selection.insertOoxml(ooxml, Word.InsertLocation.after);
+          } catch (eqErr) {
+            console.error('[RiskVir AI] Equation conversion failed, inserting as text:', eqErr);
+            // Fallback: insert as plain text
+            const selection = doc.getSelection();
+            selection.insertText(a.latex, Word.InsertLocation.after);
           }
           break;
         }
