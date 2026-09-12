@@ -129,7 +129,7 @@ function App() {
   const [inputValue, setInputValue]       = useState('')
   const [isTyping, setIsTyping]           = useState(false)
   const [licenseKey, setLicenseKey]       = useState<string | null>(localStorage.getItem('officeai_license'))
-  const [showActivation, setShowActivation] = useState(false)
+  const [showActivation, setShowActivation] = useState(() => !localStorage.getItem('officeai_license'))
   const [theme, setTheme]                 = useState<'light' | 'dark'>(() => (localStorage.getItem('officeai_theme') as 'light' | 'dark') || 'light')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
