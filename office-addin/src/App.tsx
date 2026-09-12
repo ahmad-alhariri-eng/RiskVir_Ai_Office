@@ -130,7 +130,16 @@ function App() {
   const [isTyping, setIsTyping]           = useState(false)
   const [licenseKey, setLicenseKey]       = useState<string | null>(localStorage.getItem('officeai_license'))
   const [showActivation, setShowActivation] = useState(false)
+  const [theme, setTheme]                 = useState<'light' | 'dark'>(() => (localStorage.getItem('officeai_theme') as 'light' | 'dark') || 'light')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  // ── Theme management ──────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    localStorage.setItem('officeai_theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))
 
   // ── Office & backend initialization ──────────────────────────
   useEffect(() => {
@@ -317,7 +326,7 @@ function App() {
   }
 
   if (showActivation) {
-    return <ActivationScreen onActivate={handleActivate} backendUrl={BACKEND_URL} />;
+    return <ActivationScreen onActivate={handleActivate} backendUrl={BACKEND_URL} theme={theme} onToggleTheme={toggleTheme} />;
   }
 
   // ── Render ────────────────────────────────────────────────────
@@ -327,6 +336,16 @@ function App() {
       <header className="app-header">
         <div className="app-title">RiskVir AI Office</div>
         <div className="app-meta">
+          <button 
+            onClick={toggleTheme}
+            style={{ 
+              background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '16px',
+              color: 'var(--text-secondary)', padding: '4px' 
+            }}
+            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
           <span className="host-badge">{officeHost}</span>
           <span className={`status-badge ${backendStatus.startsWith('✅') ? 'ok' : backendStatus.startsWith('⚠️') ? 'warn' : 'err'}`}>
             {backendStatus}

@@ -1,7 +1,44 @@
 /* Global resets — App.css handles all component styles */
 *, *::before, *::after { box-sizing: border-box; }
 
-body { margin: 0; }
+:root {
+  /* Light Theme (Claude-like) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #fdfdfd;
+  --bg-tertiary: #f3f3f3;
+  --border-color: #e5e5e5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --accent-color: #D97757; /* Claude's warm accent color */
+  --accent-hover: #c46447;
+  --card-bg: #ffffff;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --input-bg: #f5f5f5;
+  --user-bubble-bg: #f0f0f0;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #242424;
+  --bg-tertiary: #2a2a2a;
+  --border-color: #333333;
+  --text-primary: #e5e5e5;
+  --text-secondary: #999999;
+  --accent-color: #D97757; 
+  --accent-hover: #e88c6e;
+  --card-bg: #242424;
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --input-bg: #2a2a2a;
+  --user-bubble-bg: #2a2a2a;
+}
+
+body { 
+  margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
 
 #root {
   width: 100%;
