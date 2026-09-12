@@ -7,6 +7,7 @@ import { executeWordAction } from './utils/wordActions'
 import { executeExcelAction } from './utils/excelActions'
 import { executePptAction } from './utils/pptActions'
 import { MessageContent } from './components/MessageContent'
+import { ActivationScreen } from './components/ActivationScreen'
 import type { OfficeAction } from './types/actions'
 
 // ─── Backend URL — HTTPS first, HTTP fallback ────────────────────
@@ -127,6 +128,8 @@ function App() {
   const [messages, setMessages]           = useState<Message[]>([])
   const [inputValue, setInputValue]       = useState('')
   const [isTyping, setIsTyping]           = useState(false)
+  const [licenseKey, setLicenseKey]       = useState<string | null>(localStorage.getItem('officeai_license'))
+  const [showActivation, setShowActivation] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   // ── Office & backend initialization ──────────────────────────
@@ -144,6 +147,10 @@ function App() {
             setBackendStatus(
               data.model_loaded ? '✅ Connected (Model Loaded)' : '⚠️ Connected (No Model)'
             )
+            // If connected but no license, show activation
+            if (!localStorage.getItem('officeai_license')) {
+              setShowActivation(true)
+            }
           } else {
             setBackendStatus('⚠️ Backend Error')
           }
@@ -180,6 +187,11 @@ function App() {
 
   // ── Send message ──────────────────────────────────────────────
   const handleSend = async (overrideMessage?: string) => {
+    if (!licenseKey) {
+      setShowActivation(true)
+      return
+    }
+
     const textToSend = (overrideMessage || inputValue).trim()
     if (!textToSend) return
 
@@ -196,7 +208,11 @@ function App() {
 
       const response = await fetch(`${BACKEND_URL}/chat`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Bypass-Tunnel-Reminder': 'true' },
+        headers: { 
+          'Content-Type': 'application/json', 
+          'Bypass-Tunnel-Reminder': 'true',
+          'License-Key': licenseKey
+        },
         body: JSON.stringify({
           message: userMsg.content,
           context,
@@ -205,6 +221,13 @@ function App() {
       })
 
       if (!response.ok) {
+        if (response.status === 401) {
+          localStorage.removeItem('officeai_license');
+          setLicenseKey(null);
+          setShowActivation(true);
+          setMessages((prev) => prev.slice(0, -2)); // Remove user message and empty assistant bubble
+          return;
+        }
         const err = await response.json().catch(() => ({}))
         throw new Error(err.error || `HTTP ${response.status}`)
       }
@@ -286,6 +309,16 @@ function App() {
   }
 
   const currentQuickActions = quickActions[officeHost] ?? []
+
+  const handleActivate = (key: string) => {
+    localStorage.setItem('officeai_license', key);
+    setLicenseKey(key);
+    setShowActivation(false);
+  }
+
+  if (showActivation) {
+    return <ActivationScreen onActivate={handleActivate} backendUrl={BACKEND_URL} />;
+  }
 
   // ── Render ────────────────────────────────────────────────────
   return (

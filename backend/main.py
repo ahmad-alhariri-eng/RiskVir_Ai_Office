@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 from core.llm_engine import LLMEngine
 from api.routes.chat import router as chat_router
+from api.routes.admin import router as admin_router
 
 # Load .env from project root (parent of backend/)
 _ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -54,6 +55,7 @@ app.add_middleware(
 
 # Register API routes
 app.include_router(chat_router)
+app.include_router(admin_router, prefix="/admin")
 
 # Serve static frontend build if available
 STATIC_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "office-addin", "dist")

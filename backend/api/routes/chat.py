@@ -4,6 +4,9 @@ from fastapi import APIRouter
 from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
+from fastapi import APIRouter, Header, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+from models.license import LicenseKey, get_db
 
 from core.prompt_builder import get_system_prompt
 
@@ -139,9 +142,35 @@ def health_check():
         "provider": "deepseek-api",
     }
 
+def verify_license(license_key: str = Header(..., alias="License-Key"), db: Session = Depends(get_db)):
+    if not license_key:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="License key required")
+    
+    # Simple dev bypass for local testing if needed, though production needs real keys
+    
+    license_obj = db.query(LicenseKey).filter(LicenseKey.key == license_key).first()
+    if not license_obj:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid license key")
+        
+    if not license_obj.is_active:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="License key has been revoked")
+        
+    if license_obj.is_expired:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="License key has expired")
+        
+    return license_obj
+
+@router.post("/verify-license")
+def verify_license_endpoint(license_key: str = Header(..., alias="License-Key"), db: Session = Depends(get_db)):
+    # Uses the dependency to do the actual check
+    try:
+        verify_license(license_key, db)
+        return {"status": "valid"}
+    except HTTPException as e:
+        return {"status": "invalid", "reason": e.detail}
 
 @router.post("/chat")
-async def chat_endpoint(req: ChatRequest):
+async def chat_endpoint(req: ChatRequest, active_license: LicenseKey = Depends(verify_license)):
     from main import engine
     if not engine:
         return JSONResponse(
