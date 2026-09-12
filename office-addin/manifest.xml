@@ -17,7 +17,7 @@
     <IconUrl DefaultValue="https://office-addin-two.vercel.app/logo.png" />
     <HighResolutionIconUrl DefaultValue="https://office-addin-two.vercel.app/logo-highres.png" />
     
-    <SupportUrl DefaultValue="https://office-addin-two.vercel.app" />
+    <SupportUrl DefaultValue="https://t.me/Ahmad_CYP" />
     <AppDomains>
         <AppDomain>https://office-addin-two.vercel.app</AppDomain>
         <AppDomain>https://lectures-rv.alwaysdata.net</AppDomain>
