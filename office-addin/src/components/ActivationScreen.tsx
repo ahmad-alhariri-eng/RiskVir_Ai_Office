@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface ActivationScreenProps {
   onActivate: (key: string) => void;
