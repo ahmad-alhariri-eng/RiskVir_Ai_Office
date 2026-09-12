@@ -5,133 +5,359 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RiskVir AI Office - لوحة الإدارة</title>
     <style>
+        :root {
+            --primary: #000000;
+            --primary-hover: #333333;
+            --danger: #e11d48;
+            --danger-hover: #be123c;
+            --success: #16a34a;
+            --success-hover: #15803d;
+            --warning: #eab308;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+            --bg: #fafafa;
+            --card-bg: #ffffff;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
+            background-color: var(--bg);
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 0;
+            color: var(--gray-700);
         }
+
+        .navbar {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 20px 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
-        h1, h2 { color: #2c3e50; }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
-        input[type="text"] {
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="date"], select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 10px 12px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
             box-sizing: border-box;
-            font-size: 16px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
         }
-        button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            font-family: inherit;
+            text-decoration: none;
         }
-        button:hover {
-            background-color: #2980b9;
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
         }
-        button.btn-danger {
-            background-color: #e74c3c;
+
+        .btn-primary:hover { background-color: var(--primary-hover); }
+
+        .btn-danger { background-color: var(--danger); color: white; }
+        .btn-danger:hover { background-color: var(--danger-hover); }
+
+        .btn-success { background-color: var(--success); color: white; }
+        .btn-success:hover { background-color: var(--success-hover); }
+        
+        .btn-outline { background-color: transparent; border: 1px solid var(--gray-300); color: var(--gray-700); }
+        .btn-outline:hover { background-color: var(--gray-100); }
+
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 12px;
         }
-        button.btn-danger:hover {
-            background-color: #c0392b;
-        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 16px 12px;
+            text-align: right;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        th {
+            color: var(--gray-500);
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        tr:hover { background-color: var(--bg); }
+        
+        tr:last-child td { border-bottom: none; }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-active { background-color: #dcfce7; color: #166534; }
+        .badge-expired { background-color: #fee2e2; color: #991b1b; }
+        .badge-revoked { background-color: #f3f4f6; color: #374151; }
+
+        .flex-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            padding: 24px;
+            border-radius: var(--radius);
+            width: 400px;
+            max-width: 90%;
+            box-shadow: var(--shadow);
+        }
+
+        .modal h3 { margin-top: 0; }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
             margin-top: 20px;
         }
-        th, td {
-            padding: 12px;
-            text-align: right;
-            border-bottom: 1px solid #ddd;
+
+        code {
+            background: var(--gray-100);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+            color: var(--primary);
         }
-        th {
-            background-color: #ecf0f1;
-            color: #2c3e50;
+        
+        .row {
+            display: flex;
+            gap: 20px;
         }
-        tr:hover { background-color: #f9f9f9; }
-        .status-active { color: #27ae60; font-weight: bold; }
-        .status-expired { color: #e74c3c; font-weight: bold; }
-        .copy-btn { margin-right: 10px; padding: 5px 10px; font-size: 12px; background-color: #95a5a6; }
+        .col {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
+
+    <div class="navbar">
+        <h1>RiskVir AI - لوحة الإدارة</h1>
+        <div><span class="badge badge-active">متصل</span></div>
+    </div>
+
     <div class="container">
-        <h1>لوحة تحكم مفاتيح التنشيط (Licenses)</h1>
         
-        <div style="background: #ecf0f1; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-            <h2>توليد مفتاح جديد (صالح لمدة 30 يوماً)</h2>
+        <!-- Generate Card -->
+        <div class="card">
+            <div class="card-header">
+                <h2>توليد مفتاح تنشيط جديد</h2>
+            </div>
             <form action="/admin/generate" method="POST">
-                <div class="form-group">
-                    <label for="client_name">اسم العميل / الجهة:</label>
-                    <input type="text" id="client_name" name="client_name" required placeholder="مثال: شركة التقنية الحديثة">
+                <div class="row">
+                    <div class="col form-group">
+                        <label for="client_name">اسم العميل / الجهة</label>
+                        <input type="text" id="client_name" name="client_name" required placeholder="مثال: شركة التقنية الحديثة">
+                    </div>
+                    <div class="col form-group">
+                        <label for="duration_type">مدة الصلاحية</label>
+                        <select id="duration_type" name="duration_type" onchange="toggleCustomDate()">
+                            <option value="30">شهر واحد (30 يوم)</option>
+                            <option value="90">3 أشهر (90 يوم)</option>
+                            <option value="365">سنة واحدة (365 يوم)</option>
+                            <option value="custom">تاريخ مخصص...</option>
+                        </select>
+                    </div>
                 </div>
-                <button type="submit">إنشاء مفتاح التنشيط</button>
+                <div class="form-group" id="custom_date_wrapper" style="display: none;">
+                    <label for="custom_date">اختر تاريخ الانتهاء</label>
+                    <input type="date" id="custom_date" name="custom_date">
+                </div>
+                <button type="submit" class="btn btn-primary">إنشاء المفتاح</button>
             </form>
         </div>
 
-        <h2>المفاتيح الحالية</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>المفتاح (Key)</th>
-                    <th>اسم العميل</th>
-                    <th>تاريخ الإنشاء</th>
-                    <th>تاريخ الانتهاء</th>
-                    <th>الحالة</th>
-                    <th>إجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for license in licenses %}
-                <tr>
-                    <td>
-                        <span id="key-{{ license.id }}">{{ license.key }}</span>
-                        <button class="copy-btn" onclick="copyToClipboard('key-{{ license.id }}')">نسخ</button>
-                    </td>
-                    <td>{{ license.client_name }}</td>
-                    <td dir="ltr" style="text-align:right">{{ license.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td dir="ltr" style="text-align:right">{{ license.expires_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td>
-                        {% if not license.is_active %}
-                            <span class="status-expired">ملغى</span>
-                        {% elif license.is_expired %}
-                            <span class="status-expired">منتهي الصلاحية</span>
+        <!-- Keys List Card -->
+        <div class="card" style="padding: 0;">
+            <div class="card-header" style="padding: 24px 24px 0 24px;">
+                <h2>إدارة المفاتيح الحالية</h2>
+            </div>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المفتاح (Key)</th>
+                            <th>العميل</th>
+                            <th>تاريخ الإنشاء</th>
+                            <th>تاريخ الانتهاء</th>
+                            <th>الحالة</th>
+                            <th>إجراءات الإدارة</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for license in licenses %}
+                        <tr>
+                            <td dir="ltr" style="text-align: right;">
+                                <code id="key-{{ license.id }}">{{ license.key }}</code>
+                                <button type="button" class="btn btn-outline btn-sm" style="margin-right: 5px; padding: 2px 6px;" onclick="copyToClipboard('key-{{ license.id }}')">نسخ</button>
+                            </td>
+                            <td>{{ license.client_name }}</td>
+                            <td dir="ltr" style="text-align:right; font-size: 13px; color: var(--gray-500);">{{ license.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td dir="ltr" style="text-align:right; font-size: 13px;">
+                                <strong>{{ license.expires_at.strftime('%Y-%m-%d') }}</strong>
+                            </td>
+                            <td>
+                                {% if not license.is_active %}
+                                    <span class="badge badge-revoked">مُلغى</span>
+                                {% elif license.is_expired %}
+                                    <span class="badge badge-expired">منتهي الصلاحية</span>
+                                {% else %}
+                                    <span class="badge badge-active">نشط</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="flex-actions">
+                                    <!-- Edit Duration -->
+                                    <button class="btn btn-outline btn-sm" onclick="openEditModal('{{ license.key }}', '{{ license.expires_at.strftime('%Y-%m-%d') }}')">تعديل المدة</button>
+                                    
+                                    <!-- Toggle Active/Revoke -->
+                                    {% if license.is_active %}
+                                    <form action="/admin/revoke" method="POST" style="margin:0;" onsubmit="return confirm('إلغاء هذا المفتاح سيمنع العميل من استخدامه. هل أنت متأكد؟');">
+                                        <input type="hidden" name="key" value="{{ license.key }}">
+                                        <button type="submit" class="btn btn-warning btn-sm" style="background:var(--warning); color:#fff; border:none;">إلغاء (Revoke)</button>
+                                    </form>
+                                    {% else %}
+                                    <form action="/admin/activate" method="POST" style="margin:0;">
+                                        <input type="hidden" name="key" value="{{ license.key }}">
+                                        <button type="submit" class="btn btn-success btn-sm">تفعيل (Activate)</button>
+                                    </form>
+                                    {% endif %}
+                                    
+                                    <!-- Hard Delete -->
+                                    <form action="/admin/delete" method="POST" style="margin:0;" onsubmit="return confirm('تحذير: سيتم حذف هذا المفتاح نهائياً ولن يظهر في السجلات. هل أنت متأكد من الحذف النهائي؟');">
+                                        <input type="hidden" name="key" value="{{ license.key }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">حذف نهائي</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                         {% else %}
-                            <span class="status-active">نشط</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if license.is_active %}
-                        <form action="/admin/revoke" method="POST" style="display:inline;" onsubmit="return confirm('هل أنت متأكد من إلغاء هذا المفتاح؟');">
-                            <input type="hidden" name="key" value="{{ license.key }}">
-                            <button type="submit" class="btn-danger" style="padding: 5px 10px; font-size: 14px;">إلغاء (Revoke)</button>
-                        </form>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td colspan="6" style="text-align: center;">لا يوجد أي مفاتيح مُولدة بعد.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-500);">لا يوجد أي مفاتيح مُولدة بعد. قم بإنشاء مفتاحك الأول من الأعلى.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Edit Duration Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <h3>تعديل تاريخ الانتهاء</h3>
+            <form action="/admin/update_duration" method="POST">
+                <input type="hidden" id="edit_key" name="key" value="">
+                <div class="form-group">
+                    <label>المفتاح:</label>
+                    <code id="edit_key_display" style="display:block; padding: 10px; margin-bottom: 10px;"></code>
+                </div>
+                <div class="form-group">
+                    <label for="new_date">تاريخ الانتهاء الجديد:</label>
+                    <input type="date" id="new_date" name="new_date" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeEditModal()">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ التعديل</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -142,6 +368,39 @@
             }, function(err) {
                 console.error('فشل النسخ: ', err);
             });
+        }
+
+        function toggleCustomDate() {
+            var select = document.getElementById('duration_type');
+            var wrapper = document.getElementById('custom_date_wrapper');
+            var customDateInput = document.getElementById('custom_date');
+            if (select.value === 'custom') {
+                wrapper.style.display = 'block';
+                customDateInput.required = true;
+            } else {
+                wrapper.style.display = 'none';
+                customDateInput.required = false;
+            }
+        }
+
+        // Modal logic
+        var modal = document.getElementById('editModal');
+        function openEditModal(key, currentDate) {
+            document.getElementById('edit_key').value = key;
+            document.getElementById('edit_key_display').innerText = key;
+            document.getElementById('new_date').value = currentDate;
+            modal.style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal if clicked outside
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeEditModal();
+            }
         }
     </script>
 </body>
