@@ -12,7 +12,11 @@ export async function executeWordAction(action: WordAction) {
         case 'insertText': {
           if (!action.text) break;
           const selection = doc.getSelection();
-          selection.insertText(action.text, Word.InsertLocation.after);
+          if (action.text.includes('\n')) {
+            selection.insertHtml(action.text.replace(/\n/g, '<br>'), Word.InsertLocation.after);
+          } else {
+            selection.insertText(action.text, Word.InsertLocation.after);
+          }
           break;
         }
 
@@ -28,7 +32,11 @@ export async function executeWordAction(action: WordAction) {
         case 'replaceSelection': {
           if (!action.text) break;
           const selection = doc.getSelection();
-          selection.insertText(action.text, Word.InsertLocation.replace);
+          if (action.text.includes('\n')) {
+            selection.insertHtml(action.text.replace(/\n/g, '<br>'), Word.InsertLocation.replace);
+          } else {
+            selection.insertText(action.text, Word.InsertLocation.replace);
+          }
           break;
         }
 
@@ -252,7 +260,11 @@ export async function executeWordAction(action: WordAction) {
           if (a.html) {
             body.insertHtml(a.html, Word.InsertLocation.end);
           } else if (a.text) {
-            body.insertText(a.text, Word.InsertLocation.end);
+            if (a.text.includes('\n')) {
+              body.insertHtml(a.text.replace(/\n/g, '<br>'), Word.InsertLocation.end);
+            } else {
+              body.insertText(a.text, Word.InsertLocation.end);
+            }
           }
           break;
         }
