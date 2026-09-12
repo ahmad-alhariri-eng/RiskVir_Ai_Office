@@ -34,7 +34,11 @@ def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
 @router.get("/", response_class=HTMLResponse)
 async def admin_dashboard(request: Request, db: Session = Depends(get_db), admin: str = Depends(verify_admin)):
     licenses = db.query(LicenseKey).order_by(LicenseKey.created_at.desc()).all()
-    return templates.TemplateResponse("admin.html", {"request": request, "licenses": licenses})
+    return templates.TemplateResponse(
+        request=request,
+        name="admin.html",
+        context={"licenses": licenses}
+    )
 
 @router.post("/generate")
 async def generate_license(client_name: str = Form(...), db: Session = Depends(get_db), admin: str = Depends(verify_admin)):
